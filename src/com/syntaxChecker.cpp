@@ -1,17 +1,21 @@
+#include <iostream>
 #include <regex>
-#include <vector>
+#include <stdexcept>
 
-bool checkDesktopSyntax(std::string property) {
-  std::regex pattern("--\\w+::\\w+=(?:\\w+|)");
+bool checkDesktopPropSyntax(std::string property) {
+  std::regex pattern(R"(--[A-Za-z0-9_-]+::[A-Za-z0-9_-]+=[A-Za-z0-9_-]*)");
 
   return std::regex_match(property, pattern);
 }
-bool checkMultipleDesktopProps(std::vector<std::string> properties) {
-  for (auto prop : properties) {
-    bool result = false;
-    if (!checkDesktopSyntax(prop)) {
-      return false;
+
+bool checkDesktopPropSyntaxSafe(std::string property) {
+  try {
+    if (!checkDesktopPropSyntax(property)) {
+      throw std::runtime_error("Property typo : " + property);
     }
+    return true;
+  } catch (std::runtime_error& e) {
+    std::cerr << e.what();
+    return false;
   }
-  return true;
 }

@@ -1,19 +1,28 @@
 #include <ArgsData.h>
+#include <syntaxChecker.h>
 
 #include <optional>
 
-ArgsData distribution(int argc, char* argv[]) {
+ArgsData distributions(int argc, char* argv[]) {
   ArgsData ad;
   std::optional<std::string> argReminderOp;
+
   for (int i = 1; i < argc; i++) {
-    if (argv[i][0] == '-' && argv[i][1] == '-') {
+    if (((std::string)argv[i]).size() < 1) continue;
+
+    if (((std::string)argv[i]).starts_with("--")) {
+      // Properties
+      if (!checkDesktopPropSyntaxSafe(argv[i])) continue;
       ad.addProperty(argv[i]);
-    } else if (argv[i][0] == '-') {
+    } else if (((std::string)argv[i]).starts_with("--")) {
+      // Args
       ad.addArg(argv[i], "");
       argReminderOp = argv[i];
     } else {
+      // Values for args
       if (!argReminderOp.has_value()) continue;
       ad.getArgs().insert_or_assign(argReminderOp.value(), argv[i]);
+      ad.addArg(argReminderOp.value(), argv[i]);
       argReminderOp.reset();
     }
   }

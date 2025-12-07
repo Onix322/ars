@@ -1,11 +1,14 @@
 #include <distribution.h>
-#include <syntaxChecker.h>
 
 #include <iostream>
 int main(int argc, char* argv[]) {
-  ArgsData argsData = distribution(argc, argv);
-
+  // distribution
+  ArgsData argsData = distributions(argc, argv);
   std::cout << argsData.getProperties().size();
-  // bool syntaxChecker = checkMultipleDesktopProps(argsData.getProperties());
+  // formatter
+
+  // mapper
+
+  // Write data
   return 0;
 }
