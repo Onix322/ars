@@ -3,7 +3,7 @@
 #include <iostream>
 int main(int argc, char* argv[]) {
   // distribution
-  ArgsData argsData = distributions(argc, argv);
+  ArgsData argsData = distribution(argc, argv);
   std::cout << argsData.getProperties().size();
   // formatter
 

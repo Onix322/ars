@@ -3,7 +3,7 @@
 
 #include <optional>
 
-ArgsData distributions(int argc, char* argv[]) {
+ArgsData distribution(int argc, char* argv[]) {
   ArgsData ad;
   std::optional<std::string> argReminderOp;
 

@@ -1,4 +1,4 @@
 #pragma once
 #include <ArgsData.h>
 
-ArgsData distributions(int arnc, char* argv[]);
+ArgsData distribution(int arnc, char* argv[]);
