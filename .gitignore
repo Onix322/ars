@@ -35,7 +35,9 @@
 *.out
 *.app
 
+# Project files / directories
 out/
+test/out/
 compile_commands.json
 .cache
 # End of https://www.toptal.com/developers/gitignore/api/c++

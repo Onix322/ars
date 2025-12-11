@@ -12,6 +12,10 @@ std::vector<std::string>& ArgsData::getProperties() {
   return this->properties;
 }
 
+void ArgsData::setProperties(std::vector<std::string> properties) {
+  this->properties = properties;
+}
+
 void ArgsData::addProperty(std::string property) {
   this->properties.push_back(property);
 }

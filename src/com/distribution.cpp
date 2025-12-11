@@ -14,7 +14,8 @@ ArgsData distribution(int argc, char* argv[]) {
       // Properties
       if (!checkDesktopPropSyntaxSafe(argv[i])) continue;
       ad.addProperty(argv[i]);
-    } else if (((std::string)argv[i]).starts_with("--")) {
+    } else if (((std::string)argv[i])[0] == '-' &&
+               ((std::string)argv[i])[1] != '-') {
       // Args
       ad.addArg(argv[i], "");
       argReminderOp = argv[i];
