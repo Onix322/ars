@@ -1,6 +1,6 @@
 #include <distribution.h>
+#include <syntaxChecker.h>
 
-#include <cstdio>
 #include <iostream>
 #include <map>
 #include <ostream>
@@ -29,12 +29,45 @@ void printMap(std::map<K, V> map) {
 
 void test_syntaxFormatter() {}
 
-void test_syntaxChecker() {}
+void test_syntaxChecker() {
+  std::cout << std::endl;
+
+  const std::string name = "2. TEST syntaxChecker.cpp";
+  const char* input[] = {
+      "--Desktop_Entry::Terminal=True", "--Desktop_Entry::Type=Application",
+      "--Desktop_Entry::::", "--Desktop Entry::Termuinal=True", "Desktop::en"};
+
+  std::vector<std::string> propertiesExpected = {
+      "--Desktop_Entry::Terminal=True", "--Desktop_Entry::Type=Application"};
+  std::vector<std::string> outputCorrect;
+  std::vector<std::string> outputFail;
+
+  for (const char* prop : input) {
+    if (checkDesktopPropSyntax(prop)) {
+      outputCorrect.push_back(prop);
+      continue;
+    }
+    outputFail.push_back(prop);
+  }
+
+  expect_equals(propertiesExpected, outputCorrect, name);
+
+  std::cout << "Data Expected:" << std::endl;
+  printArray(propertiesExpected);
+
+  std::cout << "Output CORRECT" << std::endl;
+  printArray(outputCorrect);
+
+  std::cout << "Output FAILED" << std::endl;
+  printArray(outputFail);
+
+  std::cout << std::endl;
+}
 
 void test_distribuiton() {
   const char* input[] = {"FRST_SKIPPED", "-path", "path/to/file",
                          "--Desktop_Entry::Terminal=True"};
-  std::string name = "TEST distribution.cpp";
+  std::string name = "1. TEST distribution.cpp";
 
   ArgsData providedData = distribution(4, const_cast<char**>(input));
 
@@ -57,9 +90,12 @@ void test_distribuiton() {
   std::cout << "Data expected:" << std::endl;
   printArray(expectedData.getProperties());
   printMap(expectedData.getArgs());
+
+  std::cout << std::endl;
 }
 
 int main() {
+  test_syntaxChecker();
   test_distribuiton();
   return 0;
 }
