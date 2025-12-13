@@ -11,7 +11,7 @@ include_directories(../include)
 set(SRC_FILES 
   "../src/com/distribution.cpp"
   "../src/com/syntaxChecker.cpp"
-  "../src/com/syntaxFormatter.cpp"
+  "../src/com/syntaxParser.cpp"
   "../src/com/ArgsData.cpp"
 )
 
