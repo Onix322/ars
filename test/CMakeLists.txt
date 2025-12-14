@@ -9,9 +9,9 @@ include(FetchContent)
 include_directories(../include)
 
 set(SRC_FILES 
-  "../src/com/distribution.cpp"
+  "../src/com/Dispacher.cpp"
   "../src/com/syntaxChecker.cpp"
-  "../src/com/syntaxParser.cpp"
+  "../src/com/Parser.cpp"
   "../src/com/ArgsData.cpp"
 )
 

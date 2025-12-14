@@ -1,9 +1,24 @@
-#include <ArgsData.h>
+#include "Dispacher.h"
+
 #include <syntaxChecker.h>
 
+#include <mutex>
 #include <optional>
 
-ArgsData distribution(int argc, char* argv[]) {
+Dispacher* Dispacher::instancePtr = nullptr;
+std::mutex Dispacher::mtx;
+
+Dispacher* Dispacher::getInstance() {
+  if (instancePtr == nullptr) {
+    std::lock_guard<std::mutex> lock(mtx);
+    if (instancePtr == nullptr) {
+      instancePtr = new Dispacher();
+    }
+  }
+  return instancePtr;
+}
+
+ArgsData Dispacher::dispach(int argc, char* argv[]) {
   ArgsData ad;
   std::optional<std::string> argReminderOp;
 

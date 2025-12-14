@@ -1,6 +1,6 @@
-#include <distribution.h>
+#include <Dispacher.h>
+#include <Parser.h>
 #include <syntaxChecker.h>
-#include <syntaxParser.h>
 
 #include <iostream>
 #include <map>
@@ -28,46 +28,6 @@ void printMap(std::map<K, V> map) {
   for (const auto& [key, value] : map) {
     std::cout << key << ": " << value << std::endl;
   }
-}
-
-void test_syntaxParserProperties() {
-  std::cout << std::endl;
-  const auto name = "3.2. TEST syntaxFormatter.cpp -- parse() -> properties";
-
-  std::vector<std::string> input = {"--Desktop_Entry::Terminal=True"};
-  const Property expected = Property("Desktop_Entry", "Terminal", "True");
-  Property output = parse<Property>(input.at(0));
-
-  expect_equals(output, expected, name);
-
-  std::cout << "Data provided" << std::endl;
-  printArray(input);
-  std::cout << "Data expected:" << std::endl;
-  std::cout << output.section << " -> " << output.key << ": " << output.value
-            << std::endl;
-}
-
-void test_syntaxFormatterArgs() {
-  std::cout << std::endl;
-  const auto name = "3.1. TEST syntaxFormatter.cpp -- parse() -> args";
-  // TODO create tests for syntaxFormatter
-
-  const char* input[] = {"-path", "-test"};
-  const std::vector<std::string> expected = {"path", "test"};
-  std::vector<std::string> output;
-
-  for (std::string arg : input) {
-    parse<std::string>(arg);
-    output.push_back(arg);
-  }
-
-  expect_equals(expected, output, name);
-
-  std::cout << "Data Expected:" << std::endl;
-  printArray(expected);
-
-  std::cout << "Output" << std::endl;
-  printArray(output);
 }
 
 void test_syntaxChecker() {
@@ -105,13 +65,58 @@ void test_syntaxChecker() {
   std::cout << std::endl;
 }
 
-void test_distribuiton() {
+void test_parser_properties() {
+  std::cout << std::endl;
+  const auto name = "3.2. TEST syntaxFormatter.cpp -- parseProperties()";
+  Parser* parser = Parser::getInstance();
+
+  std::vector<std::string> input = {"--Desktop_Entry::Terminal=True"};
+  const Property expected = Property("Desktop_Entry", "Terminal", "True");
+  Property output = parser->parseProperty(input.at(0));
+
+  expect_equals(output, expected, name);
+
+  std::cout << "Data provided" << std::endl;
+  printArray(input);
+  std::cout << "Data expected:" << std::endl;
+  std::cout << expected;
+  std::cout << "Ouput:" << std::endl;
+  std::cout << output;
+}
+
+void test_parser_args() {
+  std::cout << std::endl;
+  const auto name = "3.1. TEST Parser.cpp -- parseArgs()";
+  // TODO create tests for syntaxFormatter
+  Parser* parser = Parser::getInstance();
+
+  const char* input[] = {"-path", "-test"};
+  const std::vector<Argument> expected = {Argument("path", ""),
+                                          Argument("test", "")};
+  std::vector<Argument> output;
+
+  for (std::string arg : input) {
+    Argument argument = parser->parseArgs(arg);
+    output.push_back(argument);
+  }
+
+  expect_equals(expected, output, name);
+
+  std::cout << "Data Expected:" << std::endl;
+  printArray(expected);
+
+  std::cout << "Output" << std::endl;
+  printArray(output);
+}
+
+void test_dispacher() {
+  Dispacher* dispacher = Dispacher::getInstance();
+
   const char* input[] = {"FRST_SKIPPED", "-path", "path/to/file",
                          "--Desktop_Entry::Terminal=True"};
-  std::string name = "1. TEST distribution.cpp";
+  std::string name = "1.1. TEST Dispacher.cpp -> Dispacher (Singleton)";
 
-  ArgsData providedData = distribution(4, const_cast<char**>(input));
-
+  ArgsData providedData = dispacher->dispach(4, const_cast<char**>(input));
   ArgsData expectedData;
 
   std::map<std::string, std::string> expectedArgs;
@@ -136,9 +141,10 @@ void test_distribuiton() {
 }
 
 int main() {
-  test_syntaxParserProperties();
-  test_syntaxFormatterArgs();
+  test_parser_properties();
+  test_parser_args();
   test_syntaxChecker();
-  test_distribuiton();
+  test_dispacher();
+
   return 0;
 }
