@@ -1,6 +1,5 @@
 #include <Dispacher.h>
 #include <Parser.h>
-#include <syntaxChecker.h>
 
 #include <iostream>
 #include <map>
@@ -30,7 +29,7 @@ void printMap(std::map<K, V> map) {
   }
 }
 
-void test_syntaxChecker() {
+void test_syntaxChecker(SyntaxAnalizer& analizer) {
   std::cout << std::endl;
 
   const std::string name = "2. TEST syntaxChecker.cpp";
@@ -44,7 +43,7 @@ void test_syntaxChecker() {
   std::vector<std::string> outputFail;
 
   for (const char* prop : input) {
-    if (checkDesktopPropSyntax(prop)) {
+    if (analizer.checkDesktopPropSyntax(prop)) {
       outputCorrect.push_back(prop);
       continue;
     }
@@ -65,14 +64,13 @@ void test_syntaxChecker() {
   std::cout << std::endl;
 }
 
-void test_parser_properties() {
+void test_parser_properties(Parser& parser) {
   std::cout << std::endl;
   const auto name = "3.2. TEST syntaxFormatter.cpp -- parseProperties()";
-  Parser* parser = Parser::getInstance();
 
   std::vector<std::string> input = {"--Desktop_Entry::Terminal=True"};
   const Property expected = Property("Desktop_Entry", "Terminal", "True");
-  Property output = parser->parseProperty(input.at(0));
+  Property output = parser.parseProperty(input.at(0));
 
   expect_equals(output, expected, name);
 
@@ -84,11 +82,9 @@ void test_parser_properties() {
   std::cout << output;
 }
 
-void test_parser_args() {
+void test_parser_args(Parser& parser) {
   std::cout << std::endl;
   const auto name = "3.1. TEST Parser.cpp -- parseArgs()";
-  // TODO create tests for syntaxFormatter
-  Parser* parser = Parser::getInstance();
 
   const char* input[] = {"-path", "-test"};
   const std::vector<Argument> expected = {Argument("path", ""),
@@ -96,7 +92,7 @@ void test_parser_args() {
   std::vector<Argument> output;
 
   for (std::string arg : input) {
-    Argument argument = parser->parseArgs(arg);
+    Argument argument = parser.parseArgs(arg);
     output.push_back(argument);
   }
 
@@ -109,14 +105,12 @@ void test_parser_args() {
   printArray(output);
 }
 
-void test_dispacher() {
-  Dispacher* dispacher = Dispacher::getInstance();
-
+void test_dispacher(Dispacher& dispacher) {
   const char* input[] = {"FRST_SKIPPED", "-path", "path/to/file",
                          "--Desktop_Entry::Terminal=True"};
   std::string name = "1.1. TEST Dispacher.cpp -> Dispacher (Singleton)";
 
-  ArgsData providedData = dispacher->dispach(4, const_cast<char**>(input));
+  ArgsData providedData = dispacher.dispach(4, const_cast<char**>(input));
   ArgsData expectedData;
 
   std::map<std::string, std::string> expectedArgs;
@@ -141,10 +135,21 @@ void test_dispacher() {
 }
 
 int main() {
-  test_parser_properties();
-  test_parser_args();
-  test_syntaxChecker();
-  test_dispacher();
+  // init Singletons
+  SyntaxAnalizer* analizer = SyntaxAnalizer::getInstance();
+  Dispacher::init(*analizer);
+  Dispacher* dispacher = Dispacher::getInstance();
+  Parser* parser = Parser::getInstance();
 
+  // tests area
+  test_parser_properties(*parser);
+  test_parser_args(*parser);
+  test_syntaxChecker(*analizer);
+  test_dispacher(*dispacher);
+
+  // free memory
+  delete dispacher;
+  delete parser;
+  delete analizer;
   return 0;
 }
