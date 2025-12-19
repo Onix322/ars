@@ -10,7 +10,7 @@ include_directories(../include)
 
 set(SRC_FILES 
   "../src/com/Dispacher.cpp"
-  "../src/com/syntaxChecker.cpp"
+  "../src/com/syntaxAnalizer.cpp"
   "../src/com/Parser.cpp"
   "../src/com/ArgsData.cpp"
 )
