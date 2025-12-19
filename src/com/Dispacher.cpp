@@ -1,21 +1,29 @@
 #include "Dispacher.h"
 
-#include <syntaxChecker.h>
-
 #include <mutex>
 #include <optional>
+#include <stdexcept>
 
 Dispacher* Dispacher::instancePtr = nullptr;
 std::mutex Dispacher::mtx;
+SyntaxAnalizer* syntaxAnalizer = nullptr;
 
-Dispacher* Dispacher::getInstance() {
+void Dispacher::init(SyntaxAnalizer& analizer) {
   if (instancePtr == nullptr) {
     std::lock_guard<std::mutex> lock(mtx);
     if (instancePtr == nullptr) {
-      instancePtr = new Dispacher();
+      instancePtr = new Dispacher(analizer);
     }
   }
-  return instancePtr;
+}
+
+Dispacher* Dispacher::getInstance() {
+  if (instancePtr != nullptr) {
+    return instancePtr;
+  }
+  throw std::runtime_error(
+      "Dispacher instance null. Use Dispacher::init(args...) to create the "
+      "obj.");
 }
 
 ArgsData Dispacher::dispach(int argc, char* argv[]) {
@@ -27,7 +35,7 @@ ArgsData Dispacher::dispach(int argc, char* argv[]) {
 
     if (((std::string)argv[i]).starts_with("--")) {
       // Properties
-      if (!checkDesktopPropSyntaxSafe(argv[i])) continue;
+      if (!syntaxAnalizer->checkDesktopPropSyntaxSafe(argv[i])) continue;
       ad.addProperty(argv[i]);
     } else if (((std::string)argv[i])[0] == '-' &&
                ((std::string)argv[i])[1] != '-') {
