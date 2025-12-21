@@ -9,6 +9,7 @@ include(FetchContent)
 include_directories(../include)
 
 set(SRC_FILES 
+  "../src/com/FileWriter.cpp"
   "../src/com/Dispacher.cpp"
   "../src/com/syntaxAnalizer.cpp"
   "../src/com/Parser.cpp"

@@ -1,9 +1,12 @@
 #include <Dispacher.h>
+#include <FileWriter.h>
 #include <Parser.h>
 
+#include <filesystem>
 #include <iostream>
 #include <map>
 #include <ostream>
+#include <stdexcept>
 #include <string>
 #include <vector>
 using std::string;
@@ -29,10 +32,10 @@ void printMap(std::map<K, V> map) {
   }
 }
 
-void test_syntaxChecker(SyntaxAnalizer& analizer) {
+void test_syntax_analizer(SyntaxAnalizer& analizer) {
   std::cout << std::endl;
 
-  const std::string name = "2. TEST syntaxChecker.cpp";
+  const std::string name = "2. TEST SyntaxAnalizer.cpp";
   const char* input[] = {
       "--Desktop_Entry::Terminal=True", "--Desktop_Entry::Type=Application",
       "--Desktop_Entry::::", "--Desktop Entry::Termuinal=True", "Desktop::en"};
@@ -134,17 +137,36 @@ void test_dispacher(Dispacher& dispacher) {
   std::cout << std::endl;
 }
 
+void test_writter(FileWriter& writter) {
+  std::filesystem::path path("/home/alex/test_file.desktop");
+  std::vector<Property> propeties;
+
+  Property propTerminal;
+  propTerminal.section = "Desktop_Entry";
+  propTerminal.key = "Terminal";
+  propTerminal.value = "True";
+
+  propeties.push_back(propTerminal);
+
+  writter.write(path, propeties);
+
+  expect_equals(std::filesystem::exists(path), true,
+                "TEST 4 -> FileWriter.cpp");
+}
+
 int main() {
   // init Singletons
   SyntaxAnalizer* analizer = SyntaxAnalizer::getInstance();
   Dispacher::init(*analizer);
   Dispacher* dispacher = Dispacher::getInstance();
   Parser* parser = Parser::getInstance();
+  FileWriter* writter = FileWriter::getInstance();
 
   // tests area
+  test_writter(*writter);
   test_parser_properties(*parser);
   test_parser_args(*parser);
-  test_syntaxChecker(*analizer);
+  test_syntax_analizer(*analizer);
   test_dispacher(*dispacher);
 
   // free memory
