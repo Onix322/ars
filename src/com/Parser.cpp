@@ -80,7 +80,7 @@ Property Parser::parseProperty(std::string& prop) {
   return Property(section, key, value);
 }
 
-std::vector<Property> Parser::parseProperties(std::vector<std::string> props) {
+std::vector<Property> Parser::parseProperties(std::vector<std::string>& props) {
   std::vector<Property> properties;
   for (auto p : props) {
     properties.push_back(this->parseProperty(p));
