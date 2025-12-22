@@ -6,7 +6,6 @@
 #include <iostream>
 #include <map>
 #include <ostream>
-#include <stdexcept>
 #include <string>
 #include <vector>
 using std::string;
@@ -95,7 +94,8 @@ void test_parser_args(Parser& parser) {
   std::vector<Argument> output;
 
   for (std::string arg : input) {
-    Argument argument = parser.parseArgs(arg);
+    std::string value = "";
+    Argument argument = parser.parseArg(arg, value);
     output.push_back(argument);
   }
 

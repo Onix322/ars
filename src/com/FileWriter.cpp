@@ -27,6 +27,7 @@ bool FileWriter::write(std::filesystem::path& target,
                        std::vector<Property>& properties) {
   std::map<std::string, std::vector<Property>> sections;
 
+  // order
   for (auto prop : properties) {
     sections[prop.section].push_back(prop);
   }
@@ -34,8 +35,10 @@ bool FileWriter::write(std::filesystem::path& target,
   std::ofstream targetFile(target);
 
   for (auto section : sections) {
-    std::string newS = section.first;  // copie
+    // format
+    std::string newS = section.first;
     std::replace(newS.begin(), newS.end(), '_', ' ');
+    // write
     targetFile << '[' << newS << ']' << std::endl;
     for (auto val : section.second) {
       targetFile << val.key << "=" << val.value << std::endl;

@@ -1,8 +1,10 @@
 #include <Parser.h>
 
 #include <cassert>
+#include <map>
 #include <mutex>
 #include <string>
+#include <vector>
 
 Parser* Parser::instancePtr = nullptr;
 std::mutex Parser::mtx;
@@ -17,10 +19,20 @@ Parser* Parser::getInstance() {
   return instancePtr;
 }
 
-Argument Parser::parseArgs(std::string& arg) {
-  if (arg[0] == '-') arg.erase(arg.begin());
-  return Argument(arg, "");
+Argument Parser::parseArg(std::string& key, std::string& value) {
+  return Argument(key[0] == '-' ? key.substr(1) : key, value);
 }
+
+std::vector<Argument> Parser::parseArgs(
+    std::map<std::string, std::string>& argMap) {
+  std::vector<Argument> args;
+  for (auto pair : argMap) {
+    std::string key = pair.first;
+    Argument parsedArg = parseArg(key, pair.second);
+    args.push_back(parsedArg);
+  }
+  return args;
+};
 
 Property Parser::parseProperty(std::string& prop) {
   // --Terminal=True -> key=Terminal && value=True
@@ -66,4 +78,13 @@ Property Parser::parseProperty(std::string& prop) {
   }
 
   return Property(section, key, value);
+}
+
+std::vector<Property> Parser::parseProperties(std::vector<std::string> props) {
+  std::vector<Property> properties;
+  for (auto p : props) {
+    properties.push_back(this->parseProperty(p));
+  }
+
+  return properties;
 }

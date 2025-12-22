@@ -1,8 +1,10 @@
 #pragma once
 
+#include <map>
 #include <mutex>
 #include <ostream>
 #include <string>
+#include <vector>
 
 struct Argument {
   std::string key;
@@ -41,7 +43,11 @@ class Parser {
 
   static Parser* getInstance();
 
-  Argument parseArgs(std::string& arg);
+  Argument parseArg(std::string& key, std::string& value);
+
+  std::vector<Argument> parseArgs(std::map<std::string, std::string>& argMap);
 
   Property parseProperty(std::string& prop);
+
+  std::vector<Property> parseProperties(std::vector<std::string>& props);
 };
