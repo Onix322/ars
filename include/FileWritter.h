@@ -3,15 +3,15 @@
 #include <vector>
 
 #include "Parser.h"
-class FileWriter {
+class FileWritter {
  public:
-  static FileWriter* getInstance();
-  FileWriter(const FileWriter& obj) = delete;
+  static FileWritter* getInstance();
+  FileWritter(const FileWritter& obj) = delete;
 
   bool write(std::filesystem::path& target, std::vector<Property>& propeties);
 
  private:
   static std::mutex mtx;
-  static FileWriter* instancePtr;
-  FileWriter() {};
+  static FileWritter* instancePtr;
+  FileWritter() {};
 };

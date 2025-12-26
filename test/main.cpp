@@ -137,7 +137,7 @@ void test_dispacher(Dispacher& dispacher) {
   std::cout << std::endl;
 }
 
-void test_writter(FileWriter& writter) {
+void test_writter(FileWritter& writter) {
   std::filesystem::path path("/home/alex/test_file.desktop");
   std::vector<Property> propeties;
 
@@ -160,7 +160,7 @@ int main() {
   Dispacher::init(*analizer);
   Dispacher* dispacher = Dispacher::getInstance();
   Parser* parser = Parser::getInstance();
-  FileWriter* writter = FileWriter::getInstance();
+  FileWritter* writter = FileWritter::getInstance();
 
   // tests area
   test_writter(*writter);

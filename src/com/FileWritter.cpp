@@ -1,4 +1,4 @@
-#include "FileWriter.h"
+#include "FileWritter.h"
 
 #include <algorithm>
 #include <filesystem>
@@ -10,21 +10,21 @@
 #include <vector>
 
 #include "Parser.h"
-FileWriter* FileWriter::instancePtr = nullptr;
-std::mutex FileWriter::mtx;
+FileWritter* FileWritter::instancePtr = nullptr;
+std::mutex FileWritter::mtx;
 
-FileWriter* FileWriter::getInstance() {
+FileWritter* FileWritter::getInstance() {
   if (instancePtr == nullptr) {
     std::lock_guard<std::mutex> lock(mtx);
     if (instancePtr == nullptr) {
-      instancePtr = new FileWriter();
+      instancePtr = new FileWritter();
     }
   }
   return instancePtr;
 }
 
-bool FileWriter::write(std::filesystem::path& target,
-                       std::vector<Property>& properties) {
+bool FileWritter::write(std::filesystem::path& target,
+                        std::vector<Property>& properties) {
   std::map<std::string, std::vector<Property>> sections;
 
   // order
